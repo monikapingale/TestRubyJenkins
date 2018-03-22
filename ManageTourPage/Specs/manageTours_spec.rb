@@ -535,7 +535,7 @@ describe ManageTours do
         @objManageTours.bookTour(1,true)
         passedLogs = @objRollbar.addLog("[Expected]  Fields should accept all valid values\n[Result  ]  Success ")
         puts "\n"
-
+        sleep(@objManageTours.instance_variable_get(:@timeSettingMap)['Sleep']['Environment']['Lightening']['Max'])
         passedLogs = @objRollbar.addLog("[Step    ]  Multiple tours should be booked")
         @objManageTours.duplicateAccountSelector("Create Account and Don't Merge",nil)
         bookedTours = @objManageTours.checkRecordCreated("Tour_Outcome__c","SELECT id,Status__c FROM Tour_Outcome__c WHERE Primary_Member__r.email = '#{@leadsTestData[0]['email']}'")
