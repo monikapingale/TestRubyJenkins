@@ -7,6 +7,7 @@ require 'json'
 require "selenium-webdriver"
 require 'enziUIUtility'
 require 'salesforce'
+#require_relative File.expand_path(Dir.pwd+"/specHelper.rb")
 require_relative File.expand_path(Dir.pwd+"/GemUtilities/EnziTestRailUtility/lib/EnziTestRailUtility.rb")
 specMap = Hash.new
 mapSuitRunId = Hash.new
@@ -79,38 +80,39 @@ if !ARGV.empty? then
     end
   end
   if !specs.empty? then
+    ARGV[1] = Salesforce.login(config['Staging']["WeWork System Administrator"]['username'],config['Staging']["WeWork System Administrator"]['password'],true)
+    ARGV[2] = EnziTestRailUtility::TestRailUtility.new(config['TestRail']['username'],config['TestRail']['password'])
     specs.uniq.each do |spec|
       #Run spec in multiple browsers
       if !spec.nil? then
         if !ENV['PROJECT_ID'].nil? && ENV['SUIT_ID'].nil? && ENV['SECTION_ID'].nil? then
           ENV['RUN_ID'] = mapSuitRunId[spec['path']]
         end
-        config['Staging'].keys.each do |profile|
-          ARGV[1] = Salesforce.login(config['Staging']["#{profile}"]['username'],config['Staging']["#{profile}"]['password'],true)
           if spec['isBrowserDependent'] then
-          specMap.fetch('browser')[0].split(" ").each do |browser|
-            #ENV['BROWSER'] = browser
-            ARGV[0] = Selenium::WebDriver.for browser.to_sym
-            ARGV[0].get "https://test.salesforce.com/login.jsp?pw=#{config['Staging']["#{profile}"]['password']}&un=#{config['Staging']["#{profile}"]['username']}"
-            EnziUIUtility.wait(ARGV[0], :id, 'phSearchInput', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Max'])
-
-            #EnziUIUtility.switchToClassic(ARGV[0])
-            #ARGV[0].get "#{ARGV[0].current_url().split('/home')[0]}/005?isUserEntityOverride=1&retURL=/ui/setup/Setup?setupid=Users&setupid=ManageUsers"
-            #EnziUIUtility.wait(ARGV[0], :name, 'new', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Min'])
-            #EnziUIUtility.loginForUser(ARGV[0],profile)
-              #EnziUIUtility.switchToWindow(ARGV[0],ARGV[0].current_url())
-              puts "Successfully Logged In with #{profile} spec is #{spec['path']}"
-              ::RSpec::Core::Runner.run([spec['path']], $stderr, $stdout)
-              #EnziUIUtility.logout(ARGV[0])
-              #EnziUIUtility.wait(ARGV[0], :name, 'new', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Max'])
-              RSpec.clear_examples
+            specMap.fetch('browser')[0].split(" ").each do |browser|
+              ARGV[0] = Selenium::WebDriver.for browser.to_sym
+              ARGV[0].get "https://test.salesforce.com/login.jsp?pw=#{config['Staging']["WeWork System Administrator"]['password']}&un=#{config['Staging']["WeWork System Administrator"]['username']}"
+              EnziUIUtility.switchToClassic(ARGV[0])
+              EnziUIUtility.wait(ARGV[0], :id, 'phSearchInput', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Max'])
+              #config['Staging'].keys.each do |profile|
+                #ENV['BROWSER'] = browser
+              YAML.load_file('UserSettings.yaml')['profile'].each do |profile|
+                ARGV[0].get "#{ARGV[0].current_url().split('/home')[0]}/005?isUserEntityOverride=1&retURL=/ui/setup/Setup?setupid=Users&setupid=ManageUsers"
+                EnziUIUtility.wait(ARGV[0], :name, 'new', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Min'])
+                EnziUIUtility.loginForUser(ARGV[0],profile)
+                EnziUIUtility.switchToWindow(ARGV[0],ARGV[0].current_url())
+                puts "Successfully Logged In with #{profile} profile"
+                ::RSpec::Core::Runner.run([spec['path']], $stderr, $stdout)
+                EnziUIUtility.logout(ARGV[0])
+                EnziUIUtility.wait(ARGV[0], :name, 'new', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Max'])
+                RSpec.clear_examples
+              end
               ARGV[0].quit
             end
           else
-            ARGV[0] = "Staging,#{profile}"
+            ARGV[0] = "Staging,WeWork System Administrator"
             ::RSpec::Core::Runner.run([spec['path']], $stderr, $stdout)
             RSpec.clear_examples
-          end
         end
       end
     end
