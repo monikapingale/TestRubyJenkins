@@ -38,7 +38,9 @@ class ManageTours
     		EnziUIUtility.wait(@driver,:class,"oneActionsDropDown",@timeSettingMap['Wait']['Environment']['Lightening']['Max'])
     		@driver.find_elements(:class,"oneActionsDropDown")[0].click
     		EnziUIUtility.wait(@driver,:class,"forceActionLink",@timeSettingMap['Wait']['Environment']['Lightening']['Max'])
-    		EnziUIUtility.selectElement(@driver,"Manage/Book a Tour","a").click
+    		bookTourLink = EnziUIUtility.selectElement(@driver,"Manage/Book a Tour","a")
+    		@wait.until { bookTourLink }
+    		bookTourLink.click
     		#if !(@driver.find_elements(:xpath ,"//iframe[starts-with(@id,'vfFrameId')]").size > 0)
     			#EnziUIUtility.wait(@driver,:class,"uiMenuItem",@timeSettingMap['Wait']['Environment']['Lightening']['Max'])
     			#EnziUIUtility.selectElement(@driver,"Manage/Book a Tour","a").click
