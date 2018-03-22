@@ -106,8 +106,8 @@ if !ARGV.empty? then
                 EnziUIUtility.logout(ARGV[0])
                 EnziUIUtility.wait(ARGV[0], :name, 'new', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Max'])
                 RSpec.clear_examples
-                ARGV[0].quit
               end
+              ARGV[0].quit
             end
           else
             ARGV[0] = "Staging,WeWork System Administrator"
