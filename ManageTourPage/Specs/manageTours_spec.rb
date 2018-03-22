@@ -590,6 +590,7 @@ describe ManageTours do
 
         @objManageTours.checkRecordCreated("Journey__c","SELECT id FROM Journey__c WHERE Primary_Email__c = '#{@leadsTestData[0]['email']}'")[0].fetch('Id')
         @objManageTours.bookTour(0,true)
+        sleep(@objManageTours.instance_variable_get(:@timeSettingMap)['Sleep']['Environment']['Lightening']['Max'])
         @objManageTours.duplicateAccountSelector("Create Account and Merge",nil)
         passedLogs = @objRollbar.addLog("[Validate]  Lead with #{@leadsTestData[0]['email']} email id should be converted",caseInfo['id'])
         expect(@objManageTours.checkRecordCreated("Lead","SELECT id,isConverted FROM Lead WHERE Email = '#{@leadsTestData[0]['email']}'")[0].fetch("IsConverted").eql? 'true').to be true
