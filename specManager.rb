@@ -96,8 +96,8 @@ if !ARGV.empty? then
               EnziUIUtility.wait(ARGV[0], :id, 'phSearchInput', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Max'])
               #config['Staging'].keys.each do |profile|
                 #ENV['BROWSER'] = browser
-              YAML.load_file('UserSettings.yaml')['profile'].each do |profile|
-                ARGV[0].get "#{ARGV[0].current_url().split('/home')[0]}/005?isUserEntityOverride=1&retURL=/ui/setup/Setup?setupid=Users&setupid=ManageUsers"
+                ARGV[0].get "#{ARGV[0].current_url().split('/home')[0]}/005"
+                YAML.load_file('UserSettings.yaml')['profile'].each do |profile|
                 EnziUIUtility.wait(ARGV[0], :name, 'new', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Min'])
                 EnziUIUtility.loginForUser(ARGV[0],profile)
                 EnziUIUtility.switchToWindow(ARGV[0],ARGV[0].current_url())
