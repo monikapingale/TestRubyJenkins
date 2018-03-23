@@ -430,12 +430,6 @@ describe ManageTours do
         expect(@objManageTours.checkRecordCreated("Lead","SELECT id,isConverted FROM Lead WHERE Email = '#{@leadsTestData[0]['email']}'")[0].fetch("IsConverted").eql? 'true').to be true
         passedLogs = @objRollbar.addLog("[Expected]  Successfully lead is converted \n[Result  ]  Success")
         puts "\n"
-
-        passedLogs = @objRollbar.addLog("[Validate]  Contact Should be created with name #{leadName}")
-        expect(@objManageTours.checkRecordCreated("Contact","SELECT id,total_Scheduled_Tours__c FROM Contact WHERE Email = '#{@leadsTestData[0]['email']}'")[0].fetch("Id")).to_not eql nil
-        passedLogs = @objRollbar.addLog("[Expected]  Successfully contact is created \n[Result  ]  Success")
-        puts "\n"
-        
         passedLogs = @objRollbar.addLog("[Validate]  Account Should be created with name #{@leadsTestData[0]['company']}")
         expect(@objManageTours.checkRecordCreated("Account","SELECT id,allow_merge__c FROM Account WHERE name = '#{@leadsTestData[0]['company']}'")[0].fetch("Id")).to_not eql nil
         passedLogs = @objRollbar.addLog("[Expected]  Successfully account is created \n[Result  ]  Success")
@@ -454,11 +448,6 @@ describe ManageTours do
         passedLogs = @objRollbar.addLog("[Expected]  Allow merge = #{ManageTours.class_variable_get(:@@recordInsertedIds)['Account'].fetch('Allow_Merge__c')}\t \n[Result  ]  Success")
         puts "\n"
         sleep(@objManageTours.instance_variable_get(:@timeSettingMap)['Sleep']['Environment']['Lightening']['Max'])
-        passedLogs = @objRollbar.addLog("[Validate]  Checking total number of scheduled tours on contact")
-        expect(ManageTours.class_variable_get(:@@recordInsertedIds)['Contact'].fetch('Total_Scheduled_Tours__c').to_i > 0).to be true
-        passedLogs = @objRollbar.addLog("[Expected]  Total number of scheduled tours = #{ManageTours.class_variable_get(:@@recordInsertedIds)['Contact'].fetch('Total_Scheduled_Tours__c')}\t \n[Result  ]  Success")
-        puts "\n"
-
         passedLogs = @objRollbar.addLog("[Validate]  Tour should be created")
         expect(@objManageTours.checkRecordCreated("Tour_Outcome__c","SELECT id,Status__c FROM Tour_Outcome__c WHERE Primary_Member__r.email = '#{@leadsTestData[0]['email']}'")[0].fetch("Id")).to_not eql nil
         passedLogs = @objRollbar.addLog("[Expected]  Successfully tour is created \n[Result  ]  Success")
@@ -476,7 +465,14 @@ describe ManageTours do
         expect(@objManageTours.checkRecordCreated('Task',"SELECT id FROM Task WHERE whatId = '#{ManageTours.class_variable_get(:@@recordInsertedIds)['Tour_Outcome__c'].fetch('Id')}'")[0].fetch('Id')).to_not eql nil
         passedLogs = @objRollbar.addLog("[Expected]  'Book a tour' activity is created \n[Result  ]  Success")
         puts "\n"
-
+        passedLogs = @objRollbar.addLog("[Validate]  Contact Should be created with name #{leadName}")
+        expect(@objManageTours.checkRecordCreated("Contact","SELECT id,total_Scheduled_Tours__c FROM Contact WHERE Email = '#{@leadsTestData[0]['email']}'")[0].fetch("Id")).to_not eql nil
+        passedLogs = @objRollbar.addLog("[Expected]  Successfully contact is created \n[Result  ]  Success")
+        puts "\n"
+        passedLogs = @objRollbar.addLog("[Validate]  Checking total number of scheduled tours on contact")
+        expect(ManageTours.class_variable_get(:@@recordInsertedIds)['Contact'].fetch('Total_Scheduled_Tours__c').to_i > 0).to be true
+        passedLogs = @objRollbar.addLog("[Expected]  Total number of scheduled tours = #{ManageTours.class_variable_get(:@@recordInsertedIds)['Contact'].fetch('Total_Scheduled_Tours__c')}\t \n[Result  ]  Success")
+        puts "\n"
         passedLogs = @objRollbar.addLog("[Step    ]  Adding result in testrail")
         @testRailUtility.postResult(86,"Pass",1,@runId)
         passedLogs = @objRollbar.addLog("[Result  ]  Success")
