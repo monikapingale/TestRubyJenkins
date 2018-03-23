@@ -179,12 +179,10 @@ class ManageTours
 	end
 	def duplicateAccountSelector(option,account)
 		if account.eql? nil then
-			EnziUIUtility.wait(@driver,:id,"header43",@timeSettingMap['Wait']['Environment']['Lightening']['Max'])
-			EnziUIUtility.selectElement(@driver,"#{option}","button").click
-			if @driver.find_elements(:id ,"header43").size > 0
-				EnziUIUtility.selectElement(@driver,"#{option}","button").click
-			end
-
+			EnziUIUtility.wait(@driver,:id,"enzi-data-table-container",@timeSettingMap['Wait']['Environment']['Lightening']['Max'])
+			optionToselect = EnziUIUtility.selectElement(@driver,"#{option}","button")
+      			@wait.until { optionToselect }
+      			optionToselect.click
 			@wait.until { !@driver.find_element(:id ,"spinner").displayed? }
 			EnziUIUtility.wait(@driver,:id,"enzi-data-table-container",@timeSettingMap['Wait']['Environment']['Lightening']['Min'])
 			@wait.until { !@driver.find_element(:id ,"spinner").displayed? }

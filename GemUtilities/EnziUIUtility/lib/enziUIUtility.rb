@@ -52,8 +52,9 @@ class EnziUIUtility
     all_Elements.each do |element|
       #select element by provided text 
       if textToselect != nil then
+    
         if element.text == textToselect then
-          element.click
+         
           return element
         end
       end
@@ -209,15 +210,17 @@ class EnziUIUtility
   end
   def self.logout(driver)
     if !(driver.current_url().include? "lightning") then
-      driver.navigate().back()
+      driver.get "#{driver.current_url().split("/apex")[0]}"
       EnziUIUtility.clickElement(driver,:id,"userNavButton")
-      EnziUIUtility.selectElement(driver,"Logout","a")
+      EnziUIUtility.selectElement(driver,"Logout","a").click
     else
       switchToWindow(driver,driver.current_url)
       self.wait(driver,:class,"oneUserProfileCardTrigger",20)
       EnziUIUtility.clickElement(driver,:class,"oneUserProfileCardTrigger")
       self.wait(driver,:class,"uiOutputURL",20)
-      EnziUIUtility.selectElement(driver,"Log Out","a")
+      EnziUIUtility.selectElement(driver,"Log Out","a").click
     end
   end
  end
+
+
