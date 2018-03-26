@@ -23,7 +23,7 @@ class ContractEvent
 		@mapCredentials = YAML.load(file.read())
 		sObjectRecordsJson = File.read(File.expand_path('',Dir.pwd)+"/ContractEvent/TestData/testRecords.json")
 		@sObjectRecords = JSON.parse(sObjectRecordsJson)
-		@sfBulk = Salesforce.login(@mapCredentials['Staging']['username'],@mapCredentials['Staging']['password'],true)
+		@sfBulk = Salesforce.login(@mapCredentials['Staging']['WeWork NMD User']['username'],@mapCredentials['Staging']['WeWork NMD User']['password'],true)
 		recordTypeIds = Salesforce.getRecords(@sfBulk,'RecordType',"Select id,Name from RecordType where SObjectType = 'Account'")
   		if recordTypeIds.result.records != nil then
 			recordTypeIds.result.records.each do |typeid|

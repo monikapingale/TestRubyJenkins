@@ -9,60 +9,20 @@ require 'rspec'
 require 'date'
 require 'securerandom'
 
-=begin
-RSpec.configure do |conf|
-  #conf.filter_run_including [[:'C451' => true],[:"452"=> true]]
-  #conf.before(:all, type: :model) do |group|
-  # group.include_examples "451"
-  conf.filter_run_including  :'452'
-end
-=end
-=begin
-RSpec.configure do |conf|
-  #c.treat_symbols_as_metadata_keys_with_true_values = true
-  puts "**********"
-  conf.filter_run_including [[:'C451' => true],[:"452"=> true]]
-  #conf.before(:all, type: :model) do |group|
-   # group.include_examples "451"
-  #end
-  #"#{string}"
-  #c.include_examples :'452'
-  #c.filter_run :'452'
-end
-=end
+
  describe ContractEvent do
   before(:all) {
     @objRollbar = RollbarUtility.new()    
     puts "------------------------------------------------------------------------------------------------------------------"
     @config = YAML.load_file(File.expand_path('', Dir.pwd) + '/credentials.yaml')
     @testRailUtility = EnziTestRailUtility::TestRailUtility.new(@config['TestRail']['username'], @config['TestRail']['password'])
-    #arrCaseIds = Array.new
-    #if !ENV['SECTION_ID'].nil? && ENV['CASE_ID'].nil? then
-      #@testRailUtility.getCases(ENV['PROJECT_ID'], ENV['SUIT_ID'], ENV['SECTION_ID']).each do |caseId|
-        #arrCaseIds.push(caseId['id'])
-      #end
-    #else
-      #if !ENV['CASE_ID'].nil? then
-        #arrCaseIds.push(ENV['CASE_ID'])
-      #end
-    #end
-    #if !ENV['SUIT_ID'].nil? && (!ENV['SECTION_ID'].nil? || !ENV['CASE_ID'].nil?) then
-      #@run = @testRailUtility.addRun("ContractEvent Run",4,26,arrCaseIds)['id']
-    #else
-      #@run = ENV['RUN_ID']                                      
-    #end
-    #if ENV['RUN_ID'].nil? then
-      #@runId = @testRailUtility.addRun("ContractEvent Run",4,26,arrCaseIds)['id']
-    #end
     @run = ENV['RUN_ID'] 
     testDataFile = File.open(File.expand_path('', Dir.pwd) + "/ContractEvent/TestData/testRecords.json", "r")
     testDataInJson = testDataFile.read()
     @testData = JSON.parse(testDataInJson)
     @sfRESTService = SfRESTService.new()
     @contractEvent = ContractEvent.new()
-    #puts "Creating Common Test Data..."
     @recordCreated = @contractEvent.createCommonTestData()
-    #puts @recordCreated
   }
   before(:each) {
     puts ""
