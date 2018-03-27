@@ -23,7 +23,11 @@ class ContractEvent
 		@mapCredentials = YAML.load(file.read())
 		sObjectRecordsJson = File.read(File.expand_path('',Dir.pwd)+"/ContractEvent/TestData/testRecords.json")
 		@sObjectRecords = JSON.parse(sObjectRecordsJson)
-		@sfBulk = Salesforce.login(@mapCredentials['Staging']['WeWork NMD User']['username'],@mapCredentials['Staging']['WeWork NMD User']['password'],true)
+
+		@sfBulk = Salesforce.login(@mapCredentials['Staging']['WeWork System Administrator']['username'],@mapCredentials['Staging']['WeWork System Administrator']['password'],true)
+
+		#@sfBulk = Salesforce.login(@mapCredentials['Staging']['WeWork NMD User']['username'],@mapCredentials['Staging']['WeWork NMD User']['password'],true)
+
 		recordTypeIds = Salesforce.getRecords(@sfBulk,'RecordType',"Select id,Name from RecordType where SObjectType = 'Account'")
   		if recordTypeIds.result.records != nil then
 			recordTypeIds.result.records.each do |typeid|
@@ -164,7 +168,7 @@ class ContractEvent
 
 	def getOpportunityDetails(id)
 		#puts "in getOpportunityDetails--->"
-		opportunity = Salesforce.getRecords(@sfBulk,"Opportunity","SELECT Id,CloseDate,Contract_Sent_Date__c,Contract_Signed_On__c,Paperwork_Sent_On_Date__c,Contract_Stage__c,StageName,Total_Desks_Reserved__c,Total_Desks_Move_Outs__c,Total_Desks_Reserved_net__c,Contract_UUID__c,Send_Paperwork_By__c,Actual_Start_Date__c,Quantity__c,No_of_Desks_gross__c,Original_Contract_UUID__c,Building__c,Move_Out_Building__c,Owner.Username,No_of_Desks_unweighted__c,No_of_Desks_weighted__c,Probability,From_Opportunity_Move_Ins__c,Contract_Type__c FROM Opportunity WHERE Id='#{id}'")
+		opportunity = Salesforce.getRecords(@sfBulk,"Opportunity","SELECT Id,Owner.Id,CloseDate,Contract_Sent_Date__c,Contract_Signed_On__c,Paperwork_Sent_On_Date__c,Contract_Stage__c,StageName,Total_Desks_Reserved__c,Total_Desks_Move_Outs__c,Total_Desks_Reserved_net__c,Contract_UUID__c,Send_Paperwork_By__c,Actual_Start_Date__c,Quantity__c,No_of_Desks_gross__c,Original_Contract_UUID__c,Building__c,Move_Out_Building__c,Owner.Username,No_of_Desks_unweighted__c,No_of_Desks_weighted__c,Probability,From_Opportunity_Move_Ins__c,Contract_Type__c,Contract_Expiration__c,Total_Monthly_Value__c,Commitment_Term_in_months__c FROM Opportunity WHERE Id='#{id}'")
 
 		return opportunity.result.records[0]
 	end
@@ -180,7 +184,10 @@ class ContractEvent
 		oppMoveOuts = Salesforce.getRecords(@sfBulk,"Opportunity_Move_Outs__c","SELECT Id,Pending_Desks__c,Move_Out_Date__c FROM Opportunity_Move_Outs__c WHERE opportunity__c='#{oppId}'")
 		return oppMoveOuts.result.records[0]
 	end
-
+	def getDiscountDetails(oppId)
+		oppDiscounts=Salesforce.getRecords(@sfBulk,"Discount__c","SELECT Id, Start_Date__c,End_Date__c,	Building_UUID__c FROM Discount__c WHERE opportunity__c='#{oppId}'")
+		return oppDiscounts.result.records[0]
+	end
 end
 =begin
 contractEvent = ContractEvent.new()
@@ -190,6 +197,11 @@ puts contractEvent.createCommonTestData()
 puts contractEvent.setUpPayload("Contract Sent",nil,"companyUUID","membershipAgreementUUID",nil,0,1,"Drop")
 puts contractEvent.setUpPayload("Contract Sent",nil,"companyUUID","membershipAgreementUUID",nil,0,1,"Drop")
 =end
+
+
+
+
+
 
 
 
