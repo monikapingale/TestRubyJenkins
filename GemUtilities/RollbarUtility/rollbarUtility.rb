@@ -5,7 +5,7 @@
 require 'rollbar'
 
 Rollbar.configure do |config|
-  config.access_token = "6206353135fa4ab78146895aaa05017a"
+  config.access_token = "0f80afe4f8eb4f03a3c1ab80ed377d32"
   #config.endpoint = 'https://api-alt.rollbar.com/api/1/item/'
   config.enabled = true
   config.environment = "sandbox"
