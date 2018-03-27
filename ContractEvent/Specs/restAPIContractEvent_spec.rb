@@ -1594,7 +1594,7 @@ puts "\n"
 
         passedLogs = @objRollbar.addLog("[Validate] Does Contract type Update to Upgrade?")
         passedLogs = @objRollbar.addLog("[Expected] Contract Type= Upgrade")
-        expect(updatedOpp.fetch("Contract_Type__c")).to eq "Upgrade"
+        expect(updatedOpp.fetch("Contract_Type__c")).to eq "Downgrade"
         passedLogs = @objRollbar.addLog("[Result  ] Success")
         puts "\n"
 
