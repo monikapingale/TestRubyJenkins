@@ -533,12 +533,12 @@ describe ManageTours do
         puts "\n"
         sleep(@objManageTours.instance_variable_get(:@timeSettingMap)['Sleep']['Environment']['Lightening']['Max'])
         passedLogs = @objRollbar.addLog("[Step    ]  Multiple tours should be booked")
-        @objManageTours.duplicateAccountSelector("Create Account and Don't Merge",nil)
+        #@objManageTours.duplicateAccountSelector("Create Account and Don't Merge",nil)
         bookedTours = @objManageTours.checkRecordCreated("Tour_Outcome__c","SELECT id,Status__c FROM Tour_Outcome__c WHERE Primary_Member__r.email = '#{@leadsTestData[0]['email']}'")
         expect(bookedTours.size > 1).to be true
         passedLogs = @objRollbar.addLog("[Expected]  Multiple tours are booked \n[Result  ]  Success")
         puts "\n"
-        
+        sleep(@objManageTours.instance_variable_get(:@timeSettingMap)['Sleep']['Environment']['Lightening']['Max'])
         passedLogs = @objRollbar.addLog("[Validate]  Open activities for tours should be created")
         expect(@objManageTours.checkRecordCreated('Task',"SELECT id FROM Task WHERE whatId = '#{bookedTours[0].fetch('Id')}'")[0].fetch('Id')).to_not eql nil
         expect(@objManageTours.checkRecordCreated('Task',"SELECT id FROM Task WHERE whatId = '#{bookedTours[1].fetch('Id')}'")[0].fetch('Id')).to_not eql nil
