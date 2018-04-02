@@ -97,6 +97,11 @@ if !ARGV.empty? then
               #config['Staging'].keys.each do |profile|
                 #ENV['BROWSER'] = browser
                 ARGV[0].get "#{ARGV[0].current_url().split('/home')[0]}/005"
+                EnziUIUtility.wait(ARGV[0], :id, 'fcf', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Min'])
+                if !ARGV[0].find_element(:id,"fcf").attribute('value').eql?('00BF0000006mfEJ') then
+                  ARGV[0].find_element(:id,"fcf").click
+                  EnziUIUtility.selectElement(ARGV[0].find_element(:id,"fcf"),"Active Users","option").click
+                end
                 YAML.load_file('UserSettings.yaml')['profile'].each do |profile|
                 EnziUIUtility.wait(ARGV[0], :name, 'new', YAML.load_file('timeSettings.yaml')['Wait']['Environment']['Classic']['Min'])
                 EnziUIUtility.loginForUser(ARGV[0],profile)
